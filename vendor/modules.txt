@@ -43,6 +43,9 @@ github.com/pelletier/go-toml/v2/internal/danger
 github.com/pelletier/go-toml/v2/internal/tracker
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
+# github.com/satori/go.uuid v1.2.0
+## explicit
+github.com/satori/go.uuid
 # github.com/stretchr/testify v1.7.1
 ## explicit
 github.com/stretchr/testify/assert

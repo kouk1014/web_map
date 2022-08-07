@@ -25,10 +25,19 @@ func InitFileStore(path string) *FileStore {
 	info, err := os.Stat(path)
 
 	if os.IsNotExist(err) {
-
+		f, creatErr := os.OpenFile(store.Path, os.O_CREATE, 066)
+		if creatErr != nil {
+			panic(creatErr)
+		}
+		f.Close()
 	} else {
 		if info.IsDir() {
 			store.Path = filepath.Join(store.Path, "cache.info")
+			f, creatErr := os.OpenFile(store.Path, os.O_CREATE, 066)
+			if creatErr != nil {
+				panic(creatErr)
+			}
+			f.Close()
 		} else {
 			file, err := os.Open(store.Path)
 			if err != nil {
@@ -40,7 +49,7 @@ func InitFileStore(path string) *FileStore {
 				panic(fmt.Sprintf("failed to read config file: %s, with error: %+v", path, err.Error()))
 			}
 			data := []model.WebInfo{}
-			err = yaml.Unmarshal(yamlFile, data)
+			err = yaml.Unmarshal(yamlFile, &data)
 			if err != nil {
 				panic(err)
 			}
@@ -67,8 +76,8 @@ func (store *FileStore) Delete(key string) error {
 }
 
 //Get .
-func (store *FileStore) Get(key string) (model.WebInfo, error) {
-	return model.WebInfo{}, nil
+func (store *FileStore) Get(key string) (*model.WebInfo, error) {
+	return &model.WebInfo{}, nil
 }
 
 //GetAll .
@@ -86,10 +95,12 @@ func (store *FileStore) Dump2File() {
 		dumpData = append(dumpData, v)
 	}
 	v, _ := yaml.Marshal(dumpData)
-	file, err := os.OpenFile(store.Path, os.O_TRUNC, 066)
+	file, err := os.OpenFile(store.Path, os.O_TRUNC|os.O_RDWR, 066)
+	//file.Truncate(0)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	file.Write(v)
+	file.Close()
 }

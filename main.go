@@ -10,16 +10,17 @@ import (
 
 func main() {
 	filePath := ""
-	flag.StringVar(&filePath, "config", "./", "cache file path")
+	flag.StringVar(&filePath, "config", "./cache.info", "cache file path")
 	flag.Parse()
 	store.StoreInstance = store.InitFileStore(filePath)
 
 	r := gin.Default()
+	r.Delims("{[", "]}")
 	r.LoadHTMLGlob("view/*")
 	r.Static("/static/", "./static")
 	r.GET("/", app.Index)
-	r.POST("/web/:name", app.AddWeb)
-	r.DELETE("/web/:name", app.DelWeb)
-	r.GET("/web/:name", app.GetWebList)
+	r.POST("/web", app.AddWeb)
+	r.DELETE("/web/:id", app.DelWeb)
+	r.GET("/web/", app.GetWebList)
 	r.Run("0.0.0.0:8888")
 }

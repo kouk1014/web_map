@@ -1,0 +1,5 @@
+- id: "1"
+  sortnumber: 2
+  name: 路由器
+  intneturl: 192.168.3.2
+  intraneturl: ""

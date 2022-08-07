@@ -9,6 +9,6 @@ var StoreInstance Store
 type Store interface {
 	Insert(key string, value model.WebInfo) error
 	Delete(key string) error
-	Get(key string) (model.WebInfo, error)
+	Get(key string) (*model.WebInfo, error)
 	GetAll() ([]model.WebInfo, error)
 }

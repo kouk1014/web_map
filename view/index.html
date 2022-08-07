@@ -2,86 +2,231 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>WebMap</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css">
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>rule edit</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<link rel="stylesheet" href="./static/layui/css/layui.css">
+	<link rel="icon" href="./static/logo2.png">
+	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="./static/layui/layui.js"></script>
+	<style>
+		.rule_list div {
+			padding-left: 1%;
+			padding-right: 1%;
+		}
+
+		.myli :hover {
+			background: #f0F0F0;
+			/* border: #000b1a; */
+		}
+
+		.link_container :hover {
+			background: #31BDEC
+		}
+
+		.linl_del :hover {
+			color: #f0F0F0;
+			background-color: red;
+			border: #000b1a;
+			border-width: 1px;
+		}
+	</style>
 </head>
 
-<body>
-    <div class="layui-container">
-    </div>
-    <!-- body 末尾处引入 layui -->
-    <script src="/static/layui/layui.js"></script>
-    <script>
-        layui.use(function () {
-            var layer = layui.layer
-                , form = layui.form
-                , laypage = layui.laypage
-                , element = layui.element
-                , laydate = layui.laydate
-                , util = layui.util;
+<body style="background-color:#F2F2F2;">
+	<div id="add_rule" lay-filter="add_rule" class="layui-form">
+		<div class="layui-card layui-container" style="margin-top:15px;">
+			<ul class="layui-row layui-col-space30" style="margin: 0;" id="ttt1">
+				<li class="layui-col-sm12 layui-col-md3">
+					<div class="layui-row layui-col-space15 layui-panel" style="height:75px;width: 80px;">
+						<div class="layui-border-box site-doc-anim layui-row">
+							<div style="position: absolute;left: 50%;top: 50%;height: 100%;width: 100%;transform: translate(-50%,-50%);"
+								class="link_container">
+								<a style="width: 100%;height: inherit;display: flex;" type="button"
+									class="layui-btn ayui-btn-fluid" onclick="open_add()">
+									<i style="margin: auto;pointer-events: none;font-size: xx-large;"
+										class="layui-icon">&#xe61f;</i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
 
-            //欢迎信息
-            layer.msg('Hello World');
+	<!-- 弹窗 -->
+	<form class="layui-form" action="" id="add_layer" style="width: 500px;display: none;">
+		<div class="layui-form-item">
+			<label class="layui-form-label">名称:</label>
+			<div class="layui-input-block">
+				<input type="text" id="name" name="name" placeholder="xxx" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">内网地址:</label>
+			<div class="layui-input-block">
+				<input type="text" id="intranetURL" name="intranetURL" placeholder="example.com" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">外网地址:</label>
+			<div class="layui-input-block">
+				<input type="text" id="intnetURL" name="intnetURL" placeholder="example.com" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">ICON地址:</label>
+			<div class="layui-input-block">
+				<input type="text" id="icon" name="icon" placeholder="example.com" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">排序:</label>
+			<div class="layui-input-block">
+				<input type="number" id="number" placeholder="1" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button type="button" onclick="commit()" class="layui-btn" lay-submit="">立即提交</button>
+				<button type="reset" id="reset" class="layui-btn layui-btn-primary">重置</button>
+			</div>
+		</div>
+	</form>
+	<!-- 弹窗结束 -->
+	<!-- item模板 -->
+	<script id="demo" type="text/html">
+		{{# layui.each(d.data, function(index, item){ }}
+					<li class="layui-col-sm12 layui-col-md3 myli">
+						<div class="layui-row layui-col-space15 layui-panel ">
+							<div class="layui-border-box site-doc-anim layui-row">
+								<div class=" ">
+									<div style="float: left;height: inherit;width: 15%; display: flex;height: 60px;" class="layui-col-md9">
+										<img src="{{item.icon}}" style="margin: auto;width: 100%;" onerror="this.src='./static/logo2.png'"/>
+									</div>
+									<div style="margin-left: 4px;float: left;">
+										<p>{{item.name}}</p>
+										<p>内:{{item.intranetURL}}</p>
+										<p>外:{{item.intnetURL}}</p>
+									</div>
+								</div>
+								<div style="position: absolute; right: 0;top: 0; height: 100%;" class="layui-col-md3 link_container">
+									<a style="width: 100%;height: inherit;display: flex;" href="http://{{item.URL}}" class="layui-btn ayui-btn-fluid"
+										target="_blank">
+										<i style="margin: auto;pointer-events: none" class="layui-icon">&#xe64c;</i>
+									</a>
+								</div>
+								<div style="position: absolute; right: 0;top: 0;color: red; width: 22px; height: 22px;" class="layui-col-md1 linl_del">
+									<button style="width: 100%;height: inherit;display: flex;" onclick="del_item('{{item.id}}')">
+										<i style="margin: auto;pointer-events: none;" class="layui-icon">&#x1006;</i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</li>
+		{{# }); }}
+	</script>
+	<!-- item模板 -->
+	<script id="demo2" type="text/html">
+	<li class="layui-col-sm12 layui-col-md3">
+		<div class="layui-row layui-col-space15 layui-panel" style="height:75px;width: 80px;">
+			<div class="layui-border-box site-doc-anim layui-row">
+				<div style="position: absolute;left: 50%; top: 50%;height: 100%;width: 100%;transform: translate(-50%,-50%);"
+					class="link_container">
+					<a style="width: 100%;height: inherit;display: flex;" type="button" class="layui-btn ayui-btn-fluid"
+						onclick="open_add()">
+						<i style="margin: auto;pointer-events: none;font-size: xx-large;" class="layui-icon">&#xe61f;</i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</li>
+	</script>
+	<script>
+		var layer_index
+		window.onload = function () {
+			get_list()
+		}
+		function get_list() {
+			$.ajax(
+				{
+					url: "/web",
+					type: "get",
+					dataType: "json",
+					success: function (data) {
+						var getTpl = demo.innerHTML
+						view = document.getElementById('ttt1');
+						layui.use('laytpl', function () {
+							var laytpl = layui.laytpl;
+							laytpl(getTpl).render(data, function (html) {
+								view.innerHTML = html;
+							});
+						})
+						$("#ttt1").append(demo2.innerHTML)
+						// $(data.data).each(function (index, item) {
+						// 	alert(item)
+						// })
+					},
+					error: function () {
+						alert("get data err")
+					}
+				}
+			)
+		}
+		function open_add() {
+			layui.use('layer', function () {
+				var layer = layui.layer;
+				layer_index = layer.open({
+					type: 1,
+					content: $('#add_layer')
+				});
+			})
+		}
+		function commit() {
+			alert("提交")
+			name = $("#name").val()
+			intnetURL = $("#intnetURL").val()
+			intranetURL = $("#intranetURL").val()
+			number = $("#number").val()
+			icon = $("#icon").val()
+			var data = { "name": name, "intnetURL": intnetURL, "intranetURL": intranetURL, "number": number, "icon": icon }
+			$.post("/web/", JSON.stringify(data), function () {
+				alert("成功")
+				$("#reset").click()
+				location.reload()
+			}, "application/json")
 
-            //输出版本号
-            lay('#version').html(layui.v);
+			layui.use('layer', function () {
+				var layer = layui.layer;
+				layer.close(layer_index)
+			})
+		}
+		function del_item(id) {
+			//alert("delete:" + id)
+			layui.use('layer', function () {
+				var layer = layui.layer;
+				layer.msg('确定删除？', {
+					time: 0 //不自动关闭
+					, btn: ['确定', '关闭']
+					, yes: function (index) {
+						layer.close(index);
+						$.ajax({
+							url: "/web/" + id,
+							method: "delete",
+							success: function () {
+								alert("删除成功")
+								location.reload()
+							}
+						})
+					}
+				});
+			})
 
-            //日期
-            laydate.render({
-                elem: '#test2'
-                , value: new Date()
-                , isInitValue: true
-            });
 
-            //触发事件
-            util.on('test-active', {
-                'test-form': function () {
-                    layer.open({
-                        type: 1
-                        , resize: false
-                        , shadeClose: true
-                        , area: '350px'
-                        , title: 'layer + form'
-                        , content: ['<ul class="layui-form layui-form-pane" style="margin: 15px;">'
-                            , '<li class="layui-form-item">'
-                            , '<label class="layui-form-label">输入框</label>'
-                            , '<div class="layui-input-block">'
-                            , '<input class="layui-input" lay-verify="required" name="field1">'
-                            , '</div>'
-                            , '</li>'
-                            , '<li class="layui-form-item">'
-                            , '<label class="layui-form-label">选择框</label>'
-                            , '<div class="layui-input-block">'
-                            , '<select name="field2">'
-                            , '<option value="A">A</option>'
-                            , '<option value="B">B</option>'
-                            , '<select>'
-                            , '</div>'
-                            , '</li>'
-                            , '<li class="layui-form-item" style="text-align:center;">'
-                            , '<button type="submit" lay-submit lay-filter="*" class="layui-btn">提交</button>'
-                            , '</li>'
-                            , '</ul>'].join('')
-                        , success: function (layero, index) {
-                            layero.find('.layui-layer-content').css('overflow', 'visible');
-
-                            form.render().on('submit(*)', function (data) {
-                                var field = data.field;
-
-                                // 显示填写的表单
-                                layer.msg(util.escape(JSON.stringify(field)), {
-                                    icon: 1
-                                });
-                                //layer.close(index); //关闭层
-                            });
-                        }
-                    });
-                }
-            });
-        });
-    </script>
+		}
+	</script>
 </body>
 
 </html>
